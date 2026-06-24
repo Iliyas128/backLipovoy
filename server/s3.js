@@ -69,6 +69,6 @@ export async function uploadDataUrl(dataUrl, folder = "uploads") {
 export async function persistValue(value, folder) {
   if (!value || typeof value !== "string") return value;
   if (!value.startsWith("data:")) return value;
-  if (!s3Enabled) return value;
+  if (!s3Enabled) throw new Error("S3 is not configured");
   return uploadDataUrl(value, folder);
 }

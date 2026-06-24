@@ -49,7 +49,7 @@ export function cleanUser(user) {
   };
 }
 
-export function createAuthMiddleware({ User, memoryUsers, isMongoReady }) {
+export function createAuthMiddleware({ User }) {
   return async (req, res, next) => {
     const header = req.headers.authorization || "";
     const token = header.startsWith("Bearer ") ? header.slice(7) : null;
@@ -63,13 +63,7 @@ export function createAuthMiddleware({ User, memoryUsers, isMongoReady }) {
       return res.status(401).json({ error: "Invalid token" });
     }
 
-    let user = null;
-    if (isMongoReady()) {
-      user = await User.findById(payload.sub);
-    } else {
-      user = memoryUsers.get(payload.sub);
-    }
-
+    const user = await User.findById(payload.sub);
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }

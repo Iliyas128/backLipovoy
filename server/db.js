@@ -9,7 +9,7 @@ const dbName = process.env.MONGO_DB_NAME || "lipovoy";
 
 export async function connectDatabase(retries = 3) {
   if (!uri) {
-    console.warn("MONGO_URI is not set — using in-memory database");
+    console.error("MONGO_URI is required");
     return false;
   }
 
@@ -32,8 +32,4 @@ export async function connectDatabase(retries = 3) {
   }
 
   return false;
-}
-
-export function isMongoReady() {
-  return mongoose.connection.readyState === 1;
 }

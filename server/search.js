@@ -40,15 +40,11 @@ export async function mongoTextSearch(Product, query, limit = 12) {
   }
 }
 
-export async function searchProducts({ products, Product, query, clean, isMongoReady, limit = 12 }) {
+export async function searchProducts({ products, Product, query, clean, limit = 12 }) {
   const q = String(query || "").trim();
   if (!q) return [];
 
-  let mongoHits = [];
-  if (isMongoReady()) {
-    mongoHits = await mongoTextSearch(Product, q, limit);
-  }
-
+  const mongoHits = await mongoTextSearch(Product, q, limit);
   const fuzzyHits = fuzzySearchProducts(products, q, limit * 2);
   const merged = new Map();
 
