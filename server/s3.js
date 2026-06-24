@@ -1,10 +1,16 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 
-const bucket = process.env.AWS_BUCKET_NAME;
-const region = process.env.AWS_REGION || "eu-north-1";
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_KEY;
+const bucket = process.env.S3_BUCKET_NAME || process.env.AWS_BUCKET_NAME;
+const region = process.env.S3_REGION || process.env.AWS_REGION || "eu-north-1";
+const accessKeyId =
+  process.env.S3_ACCESS_KEY_ID ||
+  process.env.AWS_ACCESS_KEY_ID ||
+  process.env.AWS_ACCESS_KEY;
+const secretAccessKey =
+  process.env.S3_SECRET_ACCESS_KEY ||
+  process.env.AWS_SECRET_ACCESS_KEY ||
+  process.env.AWS_SECRET_KEY;
 
 export const s3Enabled = Boolean(bucket && accessKeyId && secretAccessKey);
 

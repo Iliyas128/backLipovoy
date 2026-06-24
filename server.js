@@ -144,8 +144,9 @@ if (!mongoConnected) {
 }
 
 if (!s3Enabled) {
-  console.error("AWS S3 is required (AWS_BUCKET_NAME, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)");
-  process.exit(1);
+  console.warn("AWS S3 not configured — uploads and base64 media will fail until S3_BUCKET_NAME, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY are set");
+} else {
+  console.log("AWS S3 uploads enabled");
 }
 
 try {
@@ -155,7 +156,6 @@ try {
 }
 
 await seedAdminUser();
-console.log("AWS S3 uploads enabled");
 
 const all = async () => (await Product.find().sort({ createdAt: 1 })).map(clean);
 
@@ -187,7 +187,7 @@ app.use(attachUser);
 app.get("/api/health", (_q, r) => r.json({
   ok: true,
   database: "mongo",
-  storage: "s3",
+  storage: s3Enabled ? "s3" : "not configured",
 }));
 
 app.post("/api/auth/register", async (q, r) => {
@@ -381,6 +381,6 @@ if (!process.env.VERCEL) {
   app.listen(port, () => {
     console.log(`Streetwear API listening on http://localhost:${port}`);
     console.log("Database: MongoDB");
-    console.log("Storage: AWS S3");
+    console.log(`Storage: ${s3Enabled ? "AWS S3" : "not configured"}`);
   });
 }
